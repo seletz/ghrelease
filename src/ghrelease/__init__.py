@@ -41,13 +41,15 @@ def get_repo(gh, owner, reponame):
 
 def print_release(release):
     name = release.name or "<no name>"
-    m = "%s (%s) @ %s" % (name.encode("utf-8"), release.tag_name, release.html_url)
+    m = u"%s (%s) @ %s" % (name, release.tag_name, release.html_url)
     if release.prerelease:
-        print t.yellow(m)
+        print t.yellow("PRERELEASE"),
     elif release.draft:
-        print t.blue(m)
+        print   t.blue("DRAFT     "),
     else:
-        print t.green(m)
+        print  t.green("RELEASE   "),
+
+    print m.encode("utf-8")
 
 def list_releases(gh, owner, reponame):
     repo = get_repo(gh, owner, reponame)
