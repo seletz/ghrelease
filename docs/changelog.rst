@@ -12,7 +12,9 @@ Change Log
 
 **enhancements**
 
-none yet
+- https://github.com/seletz/ghrelease/issues/5
+
+  Read credentials from environment.
 
 **changes**
 

@@ -3,12 +3,14 @@
 
 Usage:
     ghrelease --version
-    ghrelease --user=USER --password=PASS [options] list <reponame>
+    ghrelease [options] list <reponame>
 
 Options:
     -h --help           show this help
     -u --user=USER      github login name
     -p --password=PASS  github password
+    --password-env=ENV  read password from system environment [default: GHRELEASE_PASS]
+    --user-env=ENV      read user name from system environment [default: GHRELEASE_USER]
     --owner=OWNER       github owner [defaults to the user name]
     --debug             debug logging
     -v, --verbose       print more text
@@ -22,6 +24,8 @@ import github3
 from .log import verbose
 from .log import error
 from .log import logger
+
+from .cred import get_credentials
 
 
 __version__ = "0.1"
@@ -55,10 +59,12 @@ def main():
 
     logger.debug("args: %r", arguments)
 
-    username = arguments["--user"]
-    password = arguments["--password"]
-    owner    = arguments["--owner"]
+    username, password = get_credentials(arguments)
 
+    if not username or not password:
+        error(10, "Need username and password.")
+
+    owner    = arguments["--owner"]
     if not owner:
         owner = username
 
