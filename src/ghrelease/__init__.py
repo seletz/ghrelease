@@ -35,6 +35,15 @@ from .cred import get_credentials
 __version__ = "0.1"
 
 def get_repo(gh, owner, reponame):
+    """get_repo(gh, owner, reponame) -> repo
+
+    Get a repo and error out if no repo found.
+
+    @param gh:          the gh api handle
+    @param owner:       the owner of the repo
+    @param reponame:    the repository name
+    @returns:           repository object
+    """
     repo = gh.repository(owner, reponame)
     if repo is None:
         error(10, "repository not found: " + reponame)
@@ -42,6 +51,12 @@ def get_repo(gh, owner, reponame):
     return repo
 
 def print_release(release):
+    """print_release(release) -> None
+
+    Simple helper to pretty-print a release.
+
+    @param release:     a github3 release object
+    """
     name = release.name or "<no name>"
     m = u"%s (%s) @ %s" % (name, release.tag_name, release.html_url)
     if release.prerelease:
@@ -54,6 +69,15 @@ def print_release(release):
     print m.encode("utf-8")
 
 def list_releases(gh, owner, reponame):
+    """list_releases(gh, owner, reponame) -> None
+
+    List releases command.  Loop through all releases and pretty-print
+    them.
+
+    @param gh:          the gh api handle
+    @param owner:       the owner of the repo
+    @param reponame:    the repository name
+    """
     repo = get_repo(gh, owner, reponame)
 
     verbose("Listing releases of repository `%s`:" % reponame)
@@ -62,20 +86,45 @@ def list_releases(gh, owner, reponame):
         print_release(release)
 
 def get_latest_release(repo):
+    """get_latest_release(repo) -> release
+
+    Fetch the latest release from the given repo and
+    return it.
+
+    @param repo:        github3 repository object
+    @returns:           github3 release object or None
+    """
     return repo.iter_releases(number=1).next()
 
 def get_release(repo, tag_name):
+    """get_release(repo, tag_name) -> release
+
+    Fetch the release tagged with the given tag and
+    return it.
+
+    @param repo:        github3 repository object
+    @returns:           github3 release object or None
+    """
     for release in repo.iter_releases():
         if release.tag_name == tag_name:
             return release
 
-def open_release(gh, owner, reponame, tag=None, latest=False):
-    if not tag:
-        latest = True
+def open_release(gh, owner, reponame, tag=None):
+    """open_release(gh, owner, reponame, tag) -> None
+
+    Open command -- find the specified release and open it's
+    web page.  If the tag is not specified, the latest release
+    is opened.
+
+    @param gh:          the gh api handle
+    @param owner:       the owner of the repo
+    @param reponame:    the repository name
+    @param tag:         the tag or None
+    """
 
     repo = get_repo(gh, owner, reponame)
 
-    if latest:
+    if not tag:
         release = get_latest_release(repo)
     else:
         release = get_release(repo, tag)
@@ -86,7 +135,25 @@ def open_release(gh, owner, reponame, tag=None, latest=False):
     webbrowser.open(release.html_url)
 
 
-def create_release(gh, owner, reponame, tag, name=None, body_file=None, draft=None, prerelease=None):
+def create_release(gh, owner, reponame, tag, name=None, body_file=None,
+                   draft=None, prerelease=None):
+    """create_release(gh, wwner, reponame, tag, ...) -> None
+
+    Create release command.  Creates a new release for the given repository
+    and tag.  The tag must exist.
+
+    If `body_file` is specified, it is taken as a file name to read the release
+    body text (release notes) from.
+
+    @param gh:          the gh api handle
+    @param owner:       the owner of the repo
+    @param reponame:    the repository name
+    @param tag:         the tag name
+    @param name:        a name for the release (optional)
+    @param body_file:   a name of a file to read the release body text from (optional)
+    @param draft:       is this release a draft?  (defaults to False)
+    @param prerelease:  is this release a prerelease?  (defaults to False)
+    """
     repo = get_repo(gh, owner, reponame)
 
     body = None
