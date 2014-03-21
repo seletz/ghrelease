@@ -5,6 +5,7 @@ Usage:
     ghrelease --version
     ghrelease [options] list <reponame>
     ghrelease [options] create --tag=TAG [--name=RELEASE_NAME] [--body=FILE] [--draft | --prerelease] <reponame>
+    ghrelease [options] open (--tag=TAG | --latest) <reponame>
 
 Options:
     -h --help           show this help
@@ -21,6 +22,7 @@ from docopt import docopt
 import sys
 import logging
 import github3
+import webbrowser
 
 from .log import t
 from .log import error
@@ -59,6 +61,31 @@ def list_releases(gh, owner, reponame):
     for nr, release in enumerate(repo.iter_releases()):
         print_release(release)
 
+def get_latest_release(repo):
+    return repo.iter_releases(number=1).next()
+
+def get_release(repo, tag_name):
+    for release in repo.iter_releases():
+        if release.tag_name == tag_name:
+            return release
+
+def open_release(gh, owner, reponame, tag=None, latest=False):
+    if not tag:
+        latest = True
+
+    repo = get_repo(gh, owner, reponame)
+
+    if latest:
+        release = get_latest_release(repo)
+    else:
+        release = get_release(repo, tag)
+
+    if not release:
+        error(11, "No such release found.")
+
+    webbrowser.open(release.html_url)
+
+
 def create_release(gh, owner, reponame, tag, name=None, body_file=None, draft=None, prerelease=None):
     repo = get_repo(gh, owner, reponame)
 
@@ -76,6 +103,7 @@ def create_release(gh, owner, reponame, tag, name=None, body_file=None, draft=No
 
     verbose("Release created:")
     print_release(release)
+
 
 def main():
     arguments = docopt(__doc__, version="ghrelease v%s" % __version__)
@@ -120,6 +148,11 @@ def main():
                        body_file=arguments["--body"],
                        draft=arguments["--draft"],
                        prerelease=arguments["--prerelease"])
+
+    if arguments["open"]:
+        open_release(gh, owner,
+                     arguments["<reponame>"],
+                     arguments["--tag"])
 
 if __name__ == '__main__':
     main()

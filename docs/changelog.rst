@@ -6,6 +6,10 @@ Change Log
 
 **new features**
 
+- https://github.com/seletz/ghrelease/issues/6
+
+  Initial implementation of `open` command.
+
 - https://github.com/seletz/ghrelease/issues/2
 
   Initial implementation `create` command.
