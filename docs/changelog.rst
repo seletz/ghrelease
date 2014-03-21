@@ -6,6 +6,10 @@ Change Log
 
 **new features**
 
+- https://github.com/seletz/ghrelease/issues/2
+
+  Initial implementation `create` command.
+
 - https://github.com/seletz/ghrelease/issues/1
 
   Added minimal `list` command to list releases.
