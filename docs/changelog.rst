@@ -6,7 +6,9 @@ Change Log
 
 **new features**
 
-none yet
+- https://github.com/seletz/ghrelease/issues/1
+
+  Added minimal `list` command to list releases.
 
 **enhancements**
 
