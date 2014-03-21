@@ -45,9 +45,9 @@ def print_release(release):
     if release.prerelease:
         print t.yellow("PRERELEASE"),
     elif release.draft:
-        print   t.blue("DRAFT     "),
+        print t.blue("DRAFT     "),
     else:
-        print  t.green("RELEASE   "),
+        print t.green("RELEASE   "),
 
     print m.encode("utf-8")
 
@@ -113,12 +113,13 @@ def main():
         list_releases(gh, owner, arguments["<reponame>"])
 
     if arguments["create"]:
-        create_release(gh, owner, arguments["<reponame>"],
-            arguments["--tag"],
-            name=arguments["--name"],
-            body_file=arguments["--body"],
-            draft=arguments["--draft"],
-            prerelease=arguments["--prerelease"])
+        create_release(gh, owner,
+                       arguments["<reponame>"],
+                       arguments["--tag"],
+                       name=arguments["--name"],
+                       body_file=arguments["--body"],
+                       draft=arguments["--draft"],
+                       prerelease=arguments["--prerelease"])
 
 if __name__ == '__main__':
     main()
