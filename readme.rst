@@ -19,7 +19,7 @@ Synopsis
     Usage:
         ghrelease --version
         ghrelease [options] list <reponame>
-        ghrelease [options] create --tag=TAG [--name=RELEASE_NAME] [--body=FILE] [--draft | --prerelease] <reponame>
+        ghrelease [options] create --tag=TAG [--name=RELEASE_NAME] [--body=FILE] [--draft | --prerelease] <reponame> [<file>...]
         ghrelease [options] open (--tag=TAG | --latest) <reponame>
 
     Options:
@@ -53,11 +53,12 @@ Passing credentials via command line is insecure and ugly::
     PRERELEASE release-name (v0.1) @ https://github.com/fred/some-repo/releases/tag/v0.1
 
 Creating a new release for tag `v0.4` named `super-duper`, using the local
-file `docs/changelog.rst` as release notes::
+file `docs/changelog.rst` as release notes, uploading some zip file::
 
-    $ ghrelease create some-repo v0.4 --name super-duper --body docs/changelog.rst
+    $ ghrelease create some-repo v0.4 --name super-duper --body docs/changelog.rst super-duper-0-4.zip
     Release created:
     RELEASE    super-duper (v0.4) @ https://github.com/fred/some-repo/releases/tag/v0.4
+    uploading super-duper-0-4.zip (application/octet-stream) ...
 
 Open the web page of that release::
 

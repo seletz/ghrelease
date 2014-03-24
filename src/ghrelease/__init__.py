@@ -4,7 +4,7 @@
 Usage:
     ghrelease --version
     ghrelease [options] list <reponame>
-    ghrelease [options] create --tag=TAG [--name=RELEASE_NAME] [--body=FILE] [--draft | --prerelease] <reponame>
+    ghrelease [options] create --tag=TAG [--name=RELEASE_NAME] [--body=FILE] [--draft | --prerelease] <reponame> [<file>...]
     ghrelease [options] open (--tag=TAG | --latest) <reponame>
 
 Options:
@@ -22,6 +22,7 @@ from docopt import docopt
 import sys
 import logging
 import github3
+import mimetypes
 import webbrowser
 
 from .log import t
@@ -33,6 +34,12 @@ from .cred import get_credentials
 
 
 __version__ = "0.1"
+
+
+def guess_mimetype(filename, default='application/octet-stream'):
+    tp, encoding = mimetypes.guess_type(filename)
+    return tp or default
+
 
 def get_repo(gh, owner, reponame):
     """get_repo(gh, owner, reponame) -> repo
@@ -136,7 +143,7 @@ def open_release(gh, owner, reponame, tag=None):
 
 
 def create_release(gh, owner, reponame, tag, name=None, body_file=None,
-                   draft=None, prerelease=None):
+                   draft=None, prerelease=None, assets=None):
     """create_release(gh, wwner, reponame, tag, ...) -> None
 
     Create release command.  Creates a new release for the given repository
@@ -153,6 +160,7 @@ def create_release(gh, owner, reponame, tag, name=None, body_file=None,
     @param body_file:   a name of a file to read the release body text from (optional)
     @param draft:       is this release a draft?  (defaults to False)
     @param prerelease:  is this release a prerelease?  (defaults to False)
+    @param assets:      a list of file names (optional)
     """
     repo = get_repo(gh, owner, reponame)
 
@@ -171,6 +179,16 @@ def create_release(gh, owner, reponame, tag, name=None, body_file=None,
     verbose("Release created:")
     print_release(release)
 
+    if assets:
+        for filename in assets:
+            logger.debug("processing: %s", filename)
+            mime_type = guess_mimetype(filename)
+            logger.debug("mime type: %s", mime_type)
+
+            with file(filename, "rb") as f:
+                verbose("uploading file %s (%s) ..." % (filename, mime_type))
+                logger.debug("uploading ....")
+                release.upload_asset(mime_type, filename, f)
 
 def main():
     arguments = docopt(__doc__, version="ghrelease v%s" % __version__)
@@ -214,7 +232,8 @@ def main():
                        name=arguments["--name"],
                        body_file=arguments["--body"],
                        draft=arguments["--draft"],
-                       prerelease=arguments["--prerelease"])
+                       prerelease=arguments["--prerelease"],
+                       assets=arguments["<file>"])
 
     if arguments["open"]:
         open_release(gh, owner,
