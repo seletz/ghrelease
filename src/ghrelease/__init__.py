@@ -46,7 +46,7 @@ from .commands import release_create
 from .commands import release_open
 from .commands import release_upload_assets
 
-__version__ = "0.1"
+__version__ = "0.1.1"
 
 
 def main():

@@ -84,7 +84,7 @@ def release_create(gh, owner, reponame, tag, name=None, body_file=None,
         with file(body_file, "r") as f:
             body = f.read()
 
-    release = repo.release_create(
+    release = repo.create_release(
         tag,
         name=name,
         body=body,

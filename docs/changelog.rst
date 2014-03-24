@@ -1,7 +1,16 @@
 Change Log
 ==========
 
-0.1 - unreleased
+0.1.1 - 2014-03-24
+------------------
+
+**bugs fixed**
+
+- https://github.com/seletz/ghrelease/issues/8
+
+  Fixed silly typo.
+
+0.1 - 2014-03-24
 ----------------
 
 **new features**
