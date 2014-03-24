@@ -57,4 +57,28 @@ def upload_assets(release, assets):
             logger.debug("uploading ....")
             release.upload_asset(mime_type, filename, f)
 
+def get_latest_release(repo):
+    """get_latest_release(repo) -> release
+
+    Fetch the latest release from the given repo and
+    return it.
+
+    @param repo:        github3 repository object
+    @returns:           github3 release object or None
+    """
+    return repo.iter_releases(number=1).next()
+
+def get_release(repo, tag_name):
+    """get_release(repo, tag_name) -> release
+
+    Fetch the release tagged with the given tag and
+    return it.
+
+    @param repo:        github3 repository object
+    @returns:           github3 release object or None
+    """
+    for release in repo.iter_releases():
+        if release.tag_name == tag_name:
+            return release
+
 # vim: set ft=python ts=4 sw=4 expandtab :
