@@ -14,13 +14,24 @@ Synopsis
 
 ::
 
-    ghrelease
+    ghrelease - a GitHub release helper
 
     Usage:
         ghrelease --version
         ghrelease [options] list <reponame>
         ghrelease [options] create --tag=TAG [--name=RELEASE_NAME] [--body=FILE] [--draft | --prerelease] <reponame> [<file>...]
+        ghrelease [options] upload --tag=TAG <reponame> <file>...
         ghrelease [options] open (--tag=TAG | --latest) <reponame>
+
+    The `list` command lists available releases.
+
+    The `create` command creates new releases, optionally uploading some assets.
+
+    The `upload` command uploads assets to a existing release.  It's not possible to
+    replace assets -- the command will complain if you're trying to upload an existing
+    asset.
+
+    The `open` command opens the release's web page in the system default browser.
 
     Options:
         -h --help           show this help
@@ -64,5 +75,10 @@ Open the web page of that release::
 
     $ ghrelease open --tag v0.4 some-repo
 
+Uploading assets to an existing release::
+
+    $ ghrelease upload some-repo --tag v0.4 super-duper-0-4-docs.zip LICENSE
+    uploading file super-duper-0-4-docs.zip (application/octet-stream) ...
+    uploading file LICENSE (application/octet-stream) ...
 
 .. vim: set ft=rst tw=75 spell nocin nosi ai sw=4 ts=4 expandtab:
