@@ -1,0 +1,60 @@
+# -*- coding: utf-8 -*-
+
+import mimetypes
+
+from .log import t
+from .log import error
+from .log import logger
+from .log import verbose
+
+def guess_mimetype(filename, default='application/octet-stream'):
+    tp, encoding = mimetypes.guess_type(filename)
+    return tp or default
+
+
+def get_repo(gh, owner, reponame):
+    """get_repo(gh, owner, reponame) -> repo
+
+    Get a repo and error out if no repo found.
+
+    @param gh:          the gh api handle
+    @param owner:       the owner of the repo
+    @param reponame:    the repository name
+    @returns:           repository object
+    """
+    repo = gh.repository(owner, reponame)
+    if repo is None:
+        error(10, "repository not found: " + reponame)
+
+    return repo
+
+def print_release(release):
+    """print_release(release) -> None
+
+    Simple helper to pretty-print a release.
+
+    @param release:     a github3 release object
+    """
+    name = release.name or "<no name>"
+    m = u"%s (%s) @ %s" % (name, release.tag_name, release.html_url)
+    if release.prerelease:
+        print t.yellow("PRERELEASE"),
+    elif release.draft:
+        print t.blue("DRAFT     "),
+    else:
+        print t.green("RELEASE   "),
+
+    print m.encode("utf-8")
+
+def upload_assets(release, assets):
+    for filename in assets:
+        logger.debug("processing: %s", filename)
+        mime_type = guess_mimetype(filename)
+        logger.debug("mime type: %s", mime_type)
+
+        with file(filename, "rb") as f:
+            verbose("uploading file %s (%s) ..." % (filename, mime_type))
+            logger.debug("uploading ....")
+            release.upload_asset(mime_type, filename, f)
+
+# vim: set ft=python ts=4 sw=4 expandtab :
