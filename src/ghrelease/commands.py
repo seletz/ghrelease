@@ -12,6 +12,7 @@ from .utils import get_repo
 from .utils import get_latest_release
 from .utils import get_release
 from .utils import print_release
+from .utils import get_assets
 from .utils import upload_assets
 
 def release_list(gh, owner, reponame):
@@ -96,7 +97,24 @@ def release_create(gh, owner, reponame, tag, name=None, body_file=None,
     upload_assets(release, assets)
 
 def release_upload_assets(gh, owner, reponame, tag, assets):
-    raise NotImplementedError()
+    """release_upload_assets(gh, owner, reponame, tag, assets) -> None
+
+    Upload assets to an existing release.
+
+    @param gh:          the gh api handle
+    @param owner:       the owner of the repo
+    @param reponame:    the repository name
+    @param tag:         the tag name
+    @param assets:      a list of file names
+    """
+    logger.debug("release_upload_assets: reponame=%s, tag=%s, assets=%r", reponame, tag, assets)
+    repo = get_repo(gh, owner, reponame)
+
+    release = get_release(repo, tag)
+    if not release:
+        error(10, "No release found for tag '%s'." % tag)
+
+    upload_assets(release, assets)
 
 
 # vim: set ft=python ts=4 sw=4 expandtab :

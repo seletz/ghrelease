@@ -6,6 +6,10 @@ Change Log
 
 **new features**
 
+- https://github.com/seletz/ghrelease/issues/7
+
+  Implemented `upload` command.
+
 - https://github.com/seletz/ghrelease/issues/2
 
   Implemented uploading assets with the `create` command.

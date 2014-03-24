@@ -1,11 +1,22 @@
 # -*- coding: utf-8 -*-
-"""ghrelease
+"""ghrelease - a GitHub release helper
 
 Usage:
     ghrelease --version
     ghrelease [options] list <reponame>
     ghrelease [options] create --tag=TAG [--name=RELEASE_NAME] [--body=FILE] [--draft | --prerelease] <reponame> [<file>...]
+    ghrelease [options] upload --tag=TAG <reponame> <file>...
     ghrelease [options] open (--tag=TAG | --latest) <reponame>
+
+The `list` command lists available releases.
+
+The `create` command creates new releases, optionally uploading some assets.
+
+The `upload` command uploads assets to a existing release.  It's not possible to
+replace assets -- the command will complain if you're trying to upload an existing
+asset.
+
+The `open` command opens the release's web page in the system default browser.
 
 Options:
     -h --help           show this help
@@ -87,6 +98,12 @@ def main():
         release_open(gh, owner,
                      arguments["<reponame>"],
                      arguments["--tag"])
+
+    if arguments["upload"]:
+        release_upload_assets(gh, owner,
+                              arguments["<reponame>"],
+                              arguments["--tag"],
+                              assets=arguments["<file>"])
 
 if __name__ == '__main__':
     main()

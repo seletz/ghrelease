@@ -46,8 +46,18 @@ def print_release(release):
 
     print m.encode("utf-8")
 
+def get_assets(release):
+    return {asset.name: asset for asset in release.iter_assets()}
+
 def upload_assets(release, assets):
+
+    existing_assets = get_assets(release)
+
     for filename in assets:
+        existing = existing_assets.get(filename)
+        if existing:
+            error(12, "Asset `%s` already exists: `%s/%s`" % (filename, release.html_url, existing.name))
+
         logger.debug("processing: %s", filename)
         mime_type = guess_mimetype(filename)
         logger.debug("mime type: %s", mime_type)
