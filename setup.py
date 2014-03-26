@@ -14,7 +14,7 @@ def read(*rnames):
 version = __version__
 
 long_description = (
-    read('../readme.rst')
+    read('readme.rst')
     )
 
 setup(name='ghrelease',
@@ -33,7 +33,7 @@ setup(name='ghrelease',
       packages=find_packages('.', exclude=['ez_setup']),
       url='https://github.com/seletz/ghrelease',
       download_url='https://github.com/seletz/ghrelease/releases',
-      package_dir={'': '.'},
+      package_dir={'': 'src'},
       include_package_data=True,
       zip_safe=False,
       install_requires=['setuptools',
