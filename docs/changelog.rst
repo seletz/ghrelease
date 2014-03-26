@@ -4,7 +4,12 @@ Change Log
 0.1.2 - unreleased
 ------------------
 
-no changes yet
+**bugs fixed**
+
+- https://github.com/seletz/ghrelease/issues/10
+
+  Fixed a bug where the path of an asset would be taken as asset name.  Now
+  uses the basename of the path.
 
 0.1.1 - 2014-03-24
 ------------------
