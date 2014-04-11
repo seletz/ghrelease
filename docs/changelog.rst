@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-0.1.2 - unreleased
+0.1.2 - 2014-04-11
 ------------------
 
 **new features**
