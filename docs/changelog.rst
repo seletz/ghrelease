@@ -4,6 +4,12 @@ Change Log
 0.1.2 - unreleased
 ------------------
 
+**new features**
+
+- https://github.com/seletz/ghrelease/issues/11
+
+  Support GH two factor auth.
+
 **bugs fixed**
 
 - https://github.com/seletz/ghrelease/issues/10

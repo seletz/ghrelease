@@ -3,10 +3,11 @@
 Setup script for the ghrelease tool
 """
 import os
+import sys
 from setuptools import setup, find_packages
 
-from ghrelease import __version__
-
+sys.path.append("src/ghrelease")
+from version import __version__
 
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
@@ -37,11 +38,11 @@ setup(name='ghrelease',
       include_package_data=True,
       zip_safe=False,
       install_requires=['setuptools',
+                        # -*- Extra requirements: -*-
                         'colorama',
                         'docopt',
                         'blessings',
                         'github3.py'
-                        # -*- Extra requirements: -*-
                         ],
       entry_points={
           'console_scripts': [

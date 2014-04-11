@@ -46,7 +46,23 @@ from .commands import release_create
 from .commands import release_open
 from .commands import release_upload_assets
 
-__version__ = "0.1.1"
+from version import __version__
+
+
+try:
+    # Python 2
+    prompt = raw_input
+except NameError:
+    # Python 3
+    prompt = input
+
+def my_two_factor_function():
+    code = ''
+    while not code:
+        # The user could accidentally press Enter before being ready,
+        # let's protect them from doing that.
+        code = prompt('Enter 2FA code: ')
+    return code
 
 
 def main():
@@ -79,7 +95,9 @@ def main():
     logger.debug("username=%s", username)
     logger.debug("owner   =%s", owner)
 
-    gh = github3.login(username, password=password)
+    gh = github3.login(username,
+                       password=password,
+                       two_factor_callback=my_two_factor_function)
 
     if arguments["list"]:
         release_list(gh, owner, arguments["<reponame>"])
